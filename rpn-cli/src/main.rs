@@ -19,12 +19,17 @@ fn main() {
     if let Some(path) = opts.formula_file {
         let file = File::open(path).unwrap();
         let reader = BufReader::new(file);
-
-        for line in reader.lines() {
-            let line = line.unwrap();
-            println!("{}", line);
-        }
+        run(reader, opts.verbose);
     } else {
         println!("No file is specified.");
     }
+}
+
+fn run(reader: BufReader<File>, verbose: bool) {
+    for line in reader.lines() {
+        let line = line.unwrap();
+        println!("{}", line);
+    }
+
+    let _ = verbose;
 }
