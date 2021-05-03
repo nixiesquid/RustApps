@@ -1,4 +1,6 @@
 use clap::Clap;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 
 #[derive(Clap, Debug)]
 #[clap(name = "RPN program", version = "1.0.0", about = "RPN Calculator")]
@@ -14,10 +16,15 @@ struct Opts {
 fn main() {
     let opts = Opts::parse();
 
-    match opts.formula_file {
-        Some(file) => println!("File specified: {}", file),
-        None => println!("No file specified."),
-    }
+    if let Some(path) = opts.formula_file {
+        let file = File::open(path).unwrap();
+        let reader = BufReader::new(file);
 
-    println!("Is verbosity specified?: {}", opts.verbose);
+        for line in reader.lines() {
+            let line = line.unwrap();
+            println!("{}", line);
+        }
+    } else {
+        println!("No file is specified.");
+    }
 }
