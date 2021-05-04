@@ -13,6 +13,24 @@ struct Opts {
     formula_file: Option<String>,
 }
 
+struct RpnCalculator(bool);
+
+impl RpnCalculator {
+    pub fn new(verbose: bool) -> Self {
+        Self(verbose)
+    }
+
+    pub fn eval(&self, formula: &str) -> i32 {
+        let mut tokens = formula.split_whitespace().rev().collect::<Vec<_>>();
+        self.eval_inner(&mut tokens)
+    }
+
+    fn eval_inner(&self, tokens: &mut Vec<&str>) -> i32 {
+        let _ = tokens;
+        0
+    }
+}
+
 fn main() {
     let opts = Opts::parse();
 
@@ -28,9 +46,12 @@ fn main() {
 }
 
 fn run<R: BufRead>(reader: R, verbose: bool) {
+    let calc = RpnCalculator::new(verbose);
+
     for line in reader.lines() {
         let line = line.unwrap();
-        println!("{}", line);
+        let ans = calc.eval(&line);
+        println!("{}", ans);
     }
 
     let _ = verbose;
